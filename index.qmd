@@ -1,0 +1,40 @@
+---
+title: "Screams vs. Laughs"
+subtitle: "How American audiences respond to horror and comedy movies"
+author: "Zheyre Tolliver"
+execute:
+  echo: false
+  warning: false
+---
+
+```{r}
+#| message: false
+library(tidyverse)
+movies <- read_rds("movies.rds")
+```
+
+Horror and comedy are two genres built to make us *feel* something: fear in one, laughter in the other. For my final project, I am studying the psychological pull of these genres. To start, I looked at how audiences actually respond to them, using ratings from `r format(nrow(movies), big.mark = ",")` movies on IMDb.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 6
+movies |>
+  ggplot(aes(x = votes, y = rating, color = genre)) +
+  geom_point(alpha = 0.25, size = 1.2) +
+  geom_smooth(method = "loess", se = FALSE, linewidth = 1.3) +
+  scale_x_log10(labels = scales::label_comma()) +
+  scale_color_manual(values = c(Comedy = "#e8a33d", Horror = "#7b2cbf")) +
+  labs(
+    title = "Audiences Rate Comedies Higher Than Horror Films",
+    subtitle = "Each dot is one movie released since 1970 with at least 1,000 IMDb votes",
+    x = "Number of IMDb votes (log scale)",
+    y = "Average IMDb rating",
+    color = NULL,
+    caption = "Source: IMDb Non-Commercial Datasets"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "top")
+```
+
+Each point is one film. Movies further to the right drew more viewers, and movies higher up were rated more favorably.
